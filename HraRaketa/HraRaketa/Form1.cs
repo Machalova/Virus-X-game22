@@ -27,13 +27,15 @@ namespace HraRaketa
         PictureBox[] stop;
         PictureBox[] trojuhelnik;
         PictureBox[] srdce;
-        
+        private PictureBox[] viry;
+
         public Okno()
         {
             InitializeComponent();
+
             //form zachytí stisk  kláves
             this.KeyPreview = true;
-            this.KeyDown += Okno_KeyDown;
+            this.KeyDown += Okno_KeyDown; // definování metody pro stisk z klávesnice
             this.KeyUp += Okno_KeyUp;
 
             //inicalizace pc
@@ -41,12 +43,40 @@ namespace HraRaketa
             pictureBox_pc.Top = groupBox_hraciPlocha.Height  - pictureBox_pc.Height - 10;
 
             //Inicializace viru
-            PictureBox stop = pictureBox_stop;
+            PictureBox stop = pictureBox_stop; // stop z návrhu
+            PictureBox stop2 = new PictureBox();
+            stop2.Size = stop.Size;
+            stop2.SizeMode = PictureBoxSizeMode.Zoom;
+            stop2.Image = stop.Image;
+            groupBox_hraciPlocha.Controls.Add(stop2);
 
-             
-            PictureBox trojuhelnik= pictureBox_trojuhelnik;
+            viry = new PictureBox[] { stop, stop2 };
+            foreach (var stop in viry)
+                Resetstop(stop);
+
+            // inicializace srdcí
+            srdce = new PictureBox[] { pictureBox_srdce1, pictureBox_srdce2, pictureBox_srdce3 };
+
+
+            Casovac.Interval = 50;
+            Casovac.Tick += gameloop
+
+
+            
            
 
+        }
+
+        private void Okno_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Left) moveLeft = true;
+            if(e.KeyCode == Keys.Right) moveRight = true;
+        }
+
+        private void Okno_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Left) moveLeft = false;
+            if (e.KeyCode == Keys.Right) moveRight = false;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
